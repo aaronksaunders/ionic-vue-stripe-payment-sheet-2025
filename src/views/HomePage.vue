@@ -1,56 +1,65 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
+    <ion-header>
       <ion-toolbar>
-        <ion-title>Blank</ion-title>
+        <ion-title>Payment</ion-title>
       </ion-toolbar>
     </ion-header>
-
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
-      <div id="container">
-        <strong>Ready to create an app?</strong>
-        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-      </div>
+    <ion-content class="ion-padding">
+      <ion-item>
+        <ion-label position="stacked" style="margin-bottom: 10px"
+          >Amount ($)</ion-label
+        >
+        <ion-input
+          v-model="amount"
+          type="number"
+          :min="0.5"
+          step="0.01"
+          @ionInput="validateAmount"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked" style="margin-bottom: 10px"
+          >Email</ion-label
+        >
+        <ion-input v-model="email" type="email"></ion-input>
+      </ion-item>
+      <StripeCheckoutButton
+        :amount="amountInCents"
+        currency="usd"
+        :email="email"
+      />
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { ref, computed } from "vue";
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonItem,
+  IonLabel,
+  IonInput,
+} from "@ionic/vue";
+import StripeCheckoutButton from "@/components/StripeCheckoutButton.vue";
+
+const amount = ref<string>("");
+const email = ref<string>("");
+
+const validateAmount = (event: CustomEvent) => {
+  const value = parseFloat(event.detail.value);
+  if (value < 0.5) {
+    amount.value = "0.50";
+  }
+};
+
+const amountInCents = computed(() =>
+  Math.round(parseFloat(amount.value || "0") * 100)
+);
 </script>
 
-<style scoped>
-#container {
-  text-align: center;
-  
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
-}
-
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-  
-  color: #8c8c8c;
-  
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
-}
-</style>
+<style scoped></style>
