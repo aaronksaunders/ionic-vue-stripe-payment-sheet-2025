@@ -1,4 +1,4 @@
-# Ionic VueStripe Payment Demo
+# Ionic Vue Stripe Payment Demo
 
 A simple payment demo using Ionic Vue and Stripe Payment Sheet. This project demonstrates how to integrate Stripe payments in an Ionic Vue application.
 
